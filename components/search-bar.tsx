@@ -1,15 +1,16 @@
 import React from "react"
-import { StyleSheet, TextInput } from "react-native"
+import { StyleSheet, TextInput, TextStyle } from "react-native"
 
 interface SearchBarProps {
   searchQuery: string
   setSearchQuery: (query: string) => void
+  style?: TextStyle; // Change to TextStyle
 }
 
-export function SearchBar({ searchQuery, setSearchQuery }: SearchBarProps) {
+export function SearchBar({ searchQuery, setSearchQuery, style }: SearchBarProps) {
   return (
     <TextInput
-      style={styles.searchInput}
+      style={[styles.searchInput, style]} // Apply external style
       placeholder="Search by name or ingredients..."
       value={searchQuery}
       onChangeText={setSearchQuery}
@@ -24,8 +25,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 15,
-    marginHorizontal: 10,
-    marginBottom: 10,
     backgroundColor: "#fff"
   }
 })

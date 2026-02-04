@@ -1,3 +1,7 @@
+import React, { useState } from "react"
+import { FlatList, StyleSheet, View, Pressable } from "react-native"
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { Filters } from "@/components/filters"
 import { ProductCard } from "@/components/product-card"
 import { SearchBar } from "@/components/search-bar"
@@ -6,9 +10,6 @@ import { ALL_CATEGORIES } from "@/data/categories"
 import { ALL_INGREDIENTS } from "@/data/ingredients"
 import { mockBreadProducts } from "@/data/products"
 import { useProductSearch } from "@/hooks/use-product-search"
-import React from "react"
-import { FlatList, StyleSheet, View } from "react-native"
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function ProductsScreen() {
   const {
@@ -22,6 +23,8 @@ export function ProductsScreen() {
     selectedCategories,
     setSelectedCategories
   } = useProductSearch(mockBreadProducts)
+
+  const [showFilters, setShowFilters] = useState(false);
 
   const toggleIngredient = (ingredientId: number) => {
     setSelectedIngredients((prev) =>
@@ -49,18 +52,25 @@ export function ProductsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      <Filters
-        allIngredients={ALL_INGREDIENTS}
-        allAllergens={ALL_ALLERGENS}
-        allCategories={ALL_CATEGORIES}
-        selectedIngredients={selectedIngredients}
-        selectedAllergens={selectedAllergens}
-        selectedCategories={selectedCategories}
-        toggleIngredient={toggleIngredient}
-        toggleAllergen={toggleAllergen}
-        toggleCategory={toggleCategory}
-      />
+      <View style={styles.headerContainer}>
+        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} style={styles.searchBar} />
+        <Pressable onPress={() => setShowFilters(prev => !prev)} style={styles.filterButton}>
+          <Ionicons name={showFilters ? "options" : "options-outline"} size={24} color="black" />
+        </Pressable>
+      </View>
+      {showFilters && (
+        <Filters
+          allIngredients={ALL_INGREDIENTS}
+          allAllergens={ALL_ALLERGENS}
+          allCategories={ALL_CATEGORIES}
+          selectedIngredients={selectedIngredients}
+          selectedAllergens={selectedAllergens}
+          selectedCategories={selectedCategories}
+          toggleIngredient={toggleIngredient}
+          toggleAllergen={toggleAllergen}
+          toggleCategory={toggleCategory}
+        />
+      )}
       <FlatList
         data={filteredProducts}
         renderItem={({ item }) => <ProductCard product={item} />}
@@ -77,7 +87,21 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     backgroundColor: "#f0f0f0"
   },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    marginHorizontal: 10, // Re-added margin
+    paddingRight: 10
+  },
+  filterButton: {
+    marginLeft: 10,
+    padding: 8,
+  },
   listContent: {
     paddingHorizontal: 10
+  },
+  searchBar: {
+    flex: 1,
   }
 })
