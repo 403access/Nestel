@@ -1,7 +1,8 @@
+import { type Allergen, GLUTEN, LACTOSE } from "./allergens"
 import {
   DINKELVOLLKORNMEHL,
   HEFE,
-  Ingredient,
+  type Ingredient,
   MILCH,
   ROGGENMEHL,
   SALZ,
@@ -15,7 +16,7 @@ export interface BreadProduct {
   name: string
   thumbnail: any
   weight: string
-  allergens: string[]
+  allergens: Allergen[]
   ingredients: Ingredient[]
   availability: string[]
 }
@@ -26,7 +27,7 @@ export const mockBreadProducts: BreadProduct[] = [
     name: "Dinkelvollkornbrot",
     thumbnail: require("@/assets/images/favicon.png"),
     weight: "500g",
-    allergens: ["Gluten"],
+    allergens: [GLUTEN],
     ingredients: [DINKELVOLLKORNMEHL, WASSER, HEFE, SALZ],
     availability: ["Monday", "Wednesday", "Friday"]
   },
@@ -35,7 +36,7 @@ export const mockBreadProducts: BreadProduct[] = [
     name: "Roggenbrot",
     thumbnail: require("@/assets/images/favicon.png"),
     weight: "750g",
-    allergens: ["Gluten"],
+    allergens: [GLUTEN],
     ingredients: [ROGGENMEHL, WASSER, SAUERTEIG, SALZ],
     availability: ["Tuesday", "Thursday", "Saturday"]
   },
@@ -44,7 +45,7 @@ export const mockBreadProducts: BreadProduct[] = [
     name: "Bauernbrot",
     thumbnail: require("@/assets/images/favicon.png"),
     weight: "1000g",
-    allergens: ["Gluten", "Lactose"],
+    allergens: [GLUTEN, LACTOSE],
     ingredients: [WEIZENMEHL, ROGGENMEHL, WASSER, HEFE, SALZ, MILCH],
     availability: ["Daily"]
   },
@@ -53,7 +54,7 @@ export const mockBreadProducts: BreadProduct[] = [
     name: "Brötchen",
     thumbnail: require("@/assets/images/favicon.png"),
     weight: "80g",
-    allergens: ["Gluten"],
+    allergens: [GLUTEN],
     ingredients: [WEIZENMEHL, WASSER, HEFE, SALZ],
     availability: ["Daily"]
   }
