@@ -49,7 +49,7 @@ export const quizStyles = StyleSheet.create({
     height: 150,
     borderRadius: 75,
     marginBottom: 15,
-    backgroundColor: '#eee', // Placeholder background
+    backgroundColor: '#eee',
   },
   productName: {
     fontSize: 22,

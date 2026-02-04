@@ -4,7 +4,7 @@ import { StyleSheet, TextInput, TextStyle } from "react-native"
 interface SearchBarProps {
   searchQuery: string
   setSearchQuery: (query: string) => void
-  style?: TextStyle; // Change to TextStyle
+  style?: TextStyle;
 }
 
 export function SearchBar({ searchQuery, setSearchQuery, style }: SearchBarProps) {
