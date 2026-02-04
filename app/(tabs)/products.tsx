@@ -1,21 +1,26 @@
-import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
-import { mockBreadProducts } from '@/data/products';
-import { ProductCard } from '@/components/product-card';
-import { useProductSearch } from '@/hooks/use-product-search';
-import * as Ingredients from '@/data/ingredients';
-import * as Allergens from '@/data/allergens';
-import { Ingredient } from '@/data/ingredients';
-import { Allergen } from '@/data/allergens';
-import { Filters } from '@/components/filters';
-import { SearchBar } from '@/components/search-bar';
+import { Filters } from "@/components/filters"
+import { ProductCard } from "@/components/product-card"
+import { SearchBar } from "@/components/search-bar"
+import type { Allergen } from "@/data/allergens"
+import * as Allergens from "@/data/allergens"
+import type { Category } from "@/data/categories"
+import * as Categories from "@/data/categories"
+import type { Ingredient } from "@/data/ingredients"
+import * as Ingredients from "@/data/ingredients"
+import { mockBreadProducts } from "@/data/products"
+import { useProductSearch } from "@/hooks/use-product-search"
+import React from "react"
+import { FlatList, StyleSheet, View } from "react-native"
 
 const allIngredients = Object.values(Ingredients).filter(
-  (v) => typeof v === 'string'
-) as Ingredient[];
+  (v) => typeof v === "string"
+) as Ingredient[]
 const allAllergens = Object.values(Allergens).filter(
-  (v) => typeof v === 'string'
-) as Allergen[];
+  (v) => typeof v === "string"
+) as Allergen[]
+const allCategories = Object.values(Categories).filter(
+  (v) => typeof v === "string"
+) as Category[]
 
 export default function ProductsScreen() {
   const {
@@ -26,23 +31,33 @@ export default function ProductsScreen() {
     setSelectedIngredients,
     selectedAllergens,
     setSelectedAllergens,
-  } = useProductSearch(mockBreadProducts);
+    selectedCategories,
+    setSelectedCategories
+  } = useProductSearch(mockBreadProducts)
 
   const toggleIngredient = (ingredient: Ingredient) => {
     setSelectedIngredients((prev) =>
       prev.includes(ingredient)
         ? prev.filter((i) => i !== ingredient)
         : [...prev, ingredient]
-    );
-  };
+    )
+  }
 
   const toggleAllergen = (allergen: Allergen) => {
     setSelectedAllergens((prev) =>
       prev.includes(allergen)
         ? prev.filter((a) => a !== allergen)
         : [...prev, allergen]
-    );
-  };
+    )
+  }
+
+  const toggleCategory = (category: Category) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category]
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -50,10 +65,13 @@ export default function ProductsScreen() {
       <Filters
         allIngredients={allIngredients}
         allAllergens={allAllergens}
+        allCategories={allCategories}
         selectedIngredients={selectedIngredients}
         selectedAllergens={selectedAllergens}
+        selectedCategories={selectedCategories}
         toggleIngredient={toggleIngredient}
         toggleAllergen={toggleAllergen}
+        toggleCategory={toggleCategory}
       />
       <FlatList
         data={filteredProducts}
@@ -62,16 +80,16 @@ export default function ProductsScreen() {
         contentContainerStyle={styles.listContent}
       />
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 20,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0"
   },
   listContent: {
-    paddingHorizontal: 10,
-  },
-});
+    paddingHorizontal: 10
+  }
+})

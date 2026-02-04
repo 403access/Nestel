@@ -1,9 +1,9 @@
-import React from 'react';
-import { StyleSheet, TextInput } from 'react-native';
+import React from "react"
+import { StyleSheet, TextInput } from "react-native"
 
 interface SearchBarProps {
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
+  searchQuery: string
+  setSearchQuery: (query: string) => void
 }
 
 export function SearchBar({ searchQuery, setSearchQuery }: SearchBarProps) {
@@ -14,18 +14,18 @@ export function SearchBar({ searchQuery, setSearchQuery }: SearchBarProps) {
       value={searchQuery}
       onChangeText={setSearchQuery}
     />
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   searchInput: {
     height: 40,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 15,
     marginHorizontal: 10,
     marginBottom: 10,
-    backgroundColor: '#fff',
-  },
-});
+    backgroundColor: "#fff"
+  }
+})

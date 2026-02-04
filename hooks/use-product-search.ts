@@ -1,7 +1,8 @@
+import type { Allergen } from "@/data/allergens"
+import type { Category } from "@/data/categories"
+import type { Ingredient } from "@/data/ingredients"
+import type { BreadProduct } from "@/data/products"
 import { useState } from "react"
-import { BreadProduct } from "@/data/products"
-import { Ingredient } from "@/data/ingredients"
-import { Allergen } from "@/data/allergens"
 
 export function useProductSearch(products: BreadProduct[]) {
   const [searchQuery, setSearchQuery] = useState("")
@@ -9,6 +10,7 @@ export function useProductSearch(products: BreadProduct[]) {
     []
   )
   const [selectedAllergens, setSelectedAllergens] = useState<Allergen[]>([])
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
 
   const filteredProducts = products.filter((product) => {
     // Text search
@@ -33,7 +35,12 @@ export function useProductSearch(products: BreadProduct[]) {
         product.allergens.includes(allergen)
       )
 
-    return textMatch && ingredientMatch && allergenMatch
+    // Category filter
+    const categoryMatch =
+      selectedCategories.length === 0 ||
+      selectedCategories.includes(product.category)
+
+    return textMatch && ingredientMatch && allergenMatch && categoryMatch
   })
 
   return {
@@ -43,6 +50,8 @@ export function useProductSearch(products: BreadProduct[]) {
     selectedIngredients,
     setSelectedIngredients,
     selectedAllergens,
-    setSelectedAllergens
+    setSelectedAllergens,
+    selectedCategories,
+    setSelectedCategories
   }
 }
