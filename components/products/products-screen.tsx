@@ -21,10 +21,21 @@ export function ProductsScreen() {
     selectedAllergens,
     setSelectedAllergens,
     selectedCategories,
-    setSelectedCategories
+    setSelectedCategories,
+    selectedDoughTypes,
+    toggleDoughType,
+    selectedDairyProducts,
+    toggleDairyProduct,
+    ALL_DOUGH_INGREDIENTS,
+    ALL_DAIRY_INGREDIENTS,
   } = useProductSearch(mockBreadProducts)
 
+  const filteredAllIngredients = ALL_INGREDIENTS.filter(
+    (ingredient) => ingredient.type !== 'dough' && ingredient.type !== 'dairy'
+  );
+
   const [showFilters, setShowFilters] = useState(false);
+
 
   const toggleIngredient = (ingredientId: number) => {
     setSelectedIngredients((prev) =>
@@ -60,15 +71,21 @@ export function ProductsScreen() {
       </View>
       {showFilters && (
         <Filters
-          allIngredients={ALL_INGREDIENTS}
+          allIngredients={filteredAllIngredients}
           allAllergens={ALL_ALLERGENS}
           allCategories={ALL_CATEGORIES}
+          allDoughIngredients={ALL_DOUGH_INGREDIENTS}
+          allDairyIngredients={ALL_DAIRY_INGREDIENTS}
           selectedIngredients={selectedIngredients}
           selectedAllergens={selectedAllergens}
           selectedCategories={selectedCategories}
+          selectedDoughTypes={selectedDoughTypes}
+          selectedDairyProducts={selectedDairyProducts}
           toggleIngredient={toggleIngredient}
           toggleAllergen={toggleAllergen}
           toggleCategory={toggleCategory}
+          toggleDoughType={toggleDoughType}
+          toggleDairyProduct={toggleDairyProduct}
         />
       )}
       <FlatList

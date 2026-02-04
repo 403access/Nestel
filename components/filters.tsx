@@ -8,24 +8,36 @@ interface FiltersProps {
   allIngredients: Ingredient[]
   allAllergens: Allergen[]
   allCategories: Category[]
+  allDoughIngredients: Ingredient[] // New prop
+  allDairyIngredients: Ingredient[] // New prop
   selectedIngredients: number[]
   selectedAllergens: number[]
   selectedCategories: number[]
+  selectedDoughTypes: number[] // New prop
+  selectedDairyProducts: number[] // New prop
   toggleIngredient: (ingredientId: number) => void
   toggleAllergen: (allergenId: number) => void
   toggleCategory: (categoryId: number) => void
+  toggleDoughType: (ingredientId: number) => void // New prop
+  toggleDairyProduct: (ingredientId: number) => void // New prop
 }
 
 export function Filters({
   allIngredients,
   allAllergens,
   allCategories,
+  allDoughIngredients, // Destructure new prop
+  allDairyIngredients, // Destructure new prop
   selectedIngredients,
   selectedAllergens,
   selectedCategories,
+  selectedDoughTypes, // Destructure new prop
+  selectedDairyProducts, // Destructure new prop
   toggleIngredient,
   toggleAllergen,
-  toggleCategory
+  toggleCategory,
+  toggleDoughType, // Destructure new prop
+  toggleDairyProduct // Destructure new prop
 }: FiltersProps) {
   return (
     <>
@@ -46,6 +58,18 @@ export function Filters({
         items={allAllergens}
         selectedItems={selectedAllergens}
         toggleItem={toggleAllergen}
+      />
+      <FilterGroup // New FilterGroup for Dough Types
+        title="Dough Types"
+        items={allDoughIngredients}
+        selectedItems={selectedDoughTypes}
+        toggleItem={toggleDoughType}
+      />
+      <FilterGroup // New FilterGroup for Dairy Products
+        title="Dairy Products"
+        items={allDairyIngredients}
+        selectedItems={selectedDairyProducts}
+        toggleItem={toggleDairyProduct}
       />
     </>
   )
