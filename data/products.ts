@@ -22,7 +22,7 @@ export interface BreadProduct {
   availability: string[]
   category: number
   menuIds?: number[]
-  price: number // New mandatory property
+  price: number
 }
 
 export const mockBreadProducts: BreadProduct[] = [
@@ -36,7 +36,7 @@ export const mockBreadProducts: BreadProduct[] = [
     availability: ["Monday", "Wednesday", "Friday"],
     category: BREAD.id,
     menuIds: [LUNCH_MENU.id, DINNER_MENU.id],
-    price: 4.5 // Example price
+    price: 4.5
   },
   {
     id: 2,
@@ -48,7 +48,7 @@ export const mockBreadProducts: BreadProduct[] = [
     availability: ["Tuesday", "Thursday", "Saturday"],
     category: BREAD.id,
     menuIds: [LUNCH_MENU.id],
-    price: 3.8 // Example price
+    price: 3.8
   },
   {
     id: 3,
@@ -67,7 +67,7 @@ export const mockBreadProducts: BreadProduct[] = [
     availability: ["Daily"],
     category: BREAD.id,
     menuIds: [BREAKFAST_MENU.id, LUNCH_MENU.id],
-    price: 5.2 // Example price
+    price: 5.2
   },
   {
     id: 4,
@@ -79,6 +79,6 @@ export const mockBreadProducts: BreadProduct[] = [
     availability: ["Daily"],
     category: BROETCHEN.id,
     menuIds: [BREAKFAST_MENU.id],
-    price: 0.8 // Example price
+    price: 0.8
   }
 ]
