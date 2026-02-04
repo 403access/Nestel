@@ -8,35 +8,43 @@ import {
 } from "react-native"
 
 interface FilterGroupProps<T extends { id: number; name: string }> {
-  // Changed T.id to number
   title: string
   items: T[]
-  selectedItems: number[] // now an array of IDs (numbers)
-  toggleItem: (itemId: number) => void // now toggles by ID (number)
+  selectedItems: number[]
+  toggleItem: (itemId: number) => void
+  availableItemIds?: Set<number> // New prop for individual item disabling
+  isDisabled?: boolean // New prop for group disabling
 }
 
 export function FilterGroup<T extends { id: number; name: string }>({
   title,
   items,
   selectedItems,
-  toggleItem
+  toggleItem,
+  availableItemIds,
+  isDisabled = false // Default to false
 }: FilterGroupProps<T>) {
   return (
-    <View style={styles.filterContainer}>
+    <View style={[styles.filterContainer, isDisabled && styles.filterContainerDisabled]}>
       <Text style={styles.filterTitle}>{title}</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {items.map((item) => (
-          <TouchableOpacity
-            key={item.id}
-            style={[
-              styles.filterButton,
-              selectedItems.includes(item.id) && styles.filterButtonSelected
-            ]}
-            onPress={() => toggleItem(item.id)}
-          >
-            <Text style={styles.filterButtonText}>{item.name}</Text>
-          </TouchableOpacity>
-        ))}
+        {items.map((item) => {
+          const isItemDisabled = isDisabled || (availableItemIds && !availableItemIds.has(item.id));
+          return (
+            <TouchableOpacity
+              key={item.id}
+              style={[
+                styles.filterButton,
+                selectedItems.includes(item.id) && styles.filterButtonSelected,
+                isItemDisabled && styles.filterButtonDisabled
+              ]}
+              onPress={() => toggleItem(item.id)}
+              disabled={isItemDisabled}
+            >
+              <Text style={[styles.filterButtonText, isItemDisabled && styles.filterButtonTextDisabled]}>{item.name}</Text>
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
     </View>
   )
@@ -46,6 +54,9 @@ const styles = StyleSheet.create({
   filterContainer: {
     paddingHorizontal: 10,
     marginBottom: 10
+  },
+  filterContainerDisabled: {
+    opacity: 0.5,
   },
   filterTitle: {
     fontSize: 16,
@@ -65,7 +76,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#007bff",
     borderColor: "#007bff"
   },
+  filterButtonDisabled: {
+    backgroundColor: "#e0e0e0",
+    borderColor: "#bbb",
+  },
   filterButtonText: {
     color: "#333"
+  },
+  filterButtonTextDisabled: {
+    color: "#888",
   }
 })

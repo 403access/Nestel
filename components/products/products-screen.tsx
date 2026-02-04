@@ -26,13 +26,17 @@ export function ProductsScreen() {
     toggleDoughType,
     selectedDairyProducts,
     toggleDairyProduct,
-    ALL_DOUGH_INGREDIENTS,
-    ALL_DAIRY_INGREDIENTS,
+    filteredAllIngredients: hookFilteredAllIngredients, // Rename to avoid conflict with local variable
+    filteredDoughIngredients,
+    filteredDairyIngredients,
+    availableIngredientIds,
+    availableIngredientTypes,
+    selectedCategoryObjects,
   } = useProductSearch(mockBreadProducts)
 
-  const filteredAllIngredients = ALL_INGREDIENTS.filter(
-    (ingredient) => ingredient.type !== 'dough' && ingredient.type !== 'dairy'
-  );
+  // const filteredAllIngredients = ALL_INGREDIENTS.filter( // This is now handled within the hook
+  //   (ingredient) => ingredient.type !== 'dough' && ingredient.type !== 'dairy'
+  // );
 
   const [showFilters, setShowFilters] = useState(false);
 
@@ -71,11 +75,11 @@ export function ProductsScreen() {
       </View>
       {showFilters && (
         <Filters
-          allIngredients={filteredAllIngredients}
+          allIngredients={hookFilteredAllIngredients}
           allAllergens={ALL_ALLERGENS}
-          allCategories={ALL_CATEGORIES}
-          allDoughIngredients={ALL_DOUGH_INGREDIENTS}
-          allDairyIngredients={ALL_DAIRY_INGREDIENTS}
+          allCategories={ALL_CATEGORIES} // Keep ALL_CATEGORIES as the items for categories filter
+          allDoughIngredients={filteredDoughIngredients}
+          allDairyIngredients={filteredDairyIngredients}
           selectedIngredients={selectedIngredients}
           selectedAllergens={selectedAllergens}
           selectedCategories={selectedCategories}
@@ -86,6 +90,9 @@ export function ProductsScreen() {
           toggleCategory={toggleCategory}
           toggleDoughType={toggleDoughType}
           toggleDairyProduct={toggleDairyProduct}
+          availableIngredientIds={availableIngredientIds}
+          availableIngredientTypes={availableIngredientTypes}
+          selectedCategoryObjects={selectedCategoryObjects}
         />
       )}
       <FlatList

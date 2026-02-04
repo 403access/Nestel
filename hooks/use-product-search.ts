@@ -1,6 +1,7 @@
-import { useState } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { ALL_INGREDIENTS, Ingredient } from "@/data/ingredients"
 import type { BreadProduct } from "@/data/products"
+import { ALL_CATEGORIES, Category } from "@/data/categories";
 
 export function useProductSearch(products: BreadProduct[]) {
   const [searchQuery, setSearchQuery] = useState("")
@@ -10,23 +11,98 @@ export function useProductSearch(products: BreadProduct[]) {
   const [selectedDoughTypes, setSelectedDoughTypes] = useState<number[]>([])
   const [selectedDairyProducts, setSelectedDairyProducts] = useState<number[]>([])
 
-  const ALL_DOUGH_INGREDIENTS = ALL_INGREDIENTS.filter(ing => ing.type === 'dough');
-  const ALL_DAIRY_INGREDIENTS = ALL_INGREDIENTS.filter(ing => ing.type === 'dairy');
+  const { availableIngredientIds, availableIngredientTypes } = useMemo(() => {
+    if (selectedCategories.length === 0) {
+      return {
+        availableIngredientIds: new Set(ALL_INGREDIENTS.map(ing => ing.id)),
+        availableIngredientTypes: new Set(['dough', 'dairy', 'other'] as const),
+      };
+    }
+
+    const currentCategories = ALL_CATEGORIES.filter(cat => selectedCategories.includes(cat.id));
+    const allowedIds = new Set<number>();
+    const allowedTypes = new Set<'dough' | 'dairy' | 'other'>();
+
+    currentCategories.forEach(cat => {
+      if (cat.allowedIngredientIds) {
+        cat.allowedIngredientIds.forEach(id => allowedIds.add(id));
+      }
+      if (cat.allowedIngredientTypes) {
+        cat.allowedIngredientTypes.forEach(type => allowedTypes.add(type));
+      }
+    });
+
+    return { availableIngredientIds: allowedIds, availableIngredientTypes: allowedTypes };
+  }, [selectedCategories]);
+
+  // Effect to deselect ingredients that are no longer available
+  useEffect(() => {
+    setSelectedIngredients(prev =>
+      prev.filter(id => availableIngredientIds.has(id))
+    );
+  }, [availableIngredientIds]); // Only re-run if availableIngredientIds changes
+
+  // Effect to deselect dough types that are no longer available
+  useEffect(() => {
+    setSelectedDoughTypes(prev =>
+      prev.filter(id => availableIngredientIds.has(id))
+    );
+  }, [availableIngredientIds]);
+
+  // Effect to deselect dairy products that are no longer available
+  useEffect(() => {
+    setSelectedDairyProducts(prev =>
+      prev.filter(id => availableIngredientIds.has(id))
+    );
+  }, [availableIngredientIds]);
+
+  // Return ALL_INGREDIENTS with dough/dairy removed, without considering category availability
+  const filteredAllIngredients = useMemo(() => {
+    const doughTypeIds = ALL_INGREDIENTS.filter(ing => ing.type === 'dough').map(ing => ing.id);
+    const dairyTypeIds = ALL_INGREDIENTS.filter(ing => ing.type === 'dairy').map(ing => ing.id);
+
+    return ALL_INGREDIENTS.filter(
+      (ingredient) =>
+        !doughTypeIds.includes(ingredient.id) &&
+        !dairyTypeIds.includes(ingredient.id)
+    );
+  }, []); // No dependency on availableIngredientIds here
+
+  // Return ALL_INGREDIENTS of type 'dough', without considering category availability
+  const filteredDoughIngredients = useMemo(() => {
+    return ALL_INGREDIENTS.filter(
+      (ing) => ing.type === 'dough'
+    );
+  }, []); // No dependency on availableIngredientIds here
+
+  // Return ALL_INGREDIENTS of type 'dairy', without considering category availability
+  const filteredDairyIngredients = useMemo(() => {
+    return ALL_INGREDIENTS.filter(
+      (ing) => ing.type === 'dairy'
+    );
+  }, []); // No dependency on availableIngredientIds here
+
 
   const toggleDoughType = (doughTypeId: number) => {
-    setSelectedDoughTypes((prev) =>
-      prev.includes(doughTypeId)
-        ? prev.filter((id) => id !== doughTypeId)
-        : [...prev, doughTypeId]
-    );
+    // Only allow toggling if the ingredient is available
+    if (availableIngredientIds.has(doughTypeId)) {
+      setSelectedDoughTypes((prev) =>
+        prev.includes(doughTypeId)
+          ? prev.filter((id) => id !== doughTypeId)
+          : [...prev, doughTypeId]
+      );
+    }
   };
 
   const toggleDairyProduct = (dairyProductId: number) => {
-    setSelectedDairyProducts((prev) =>
-      prev.includes(dairyProductId)
-        ? prev.filter((id) => id !== dairyProductId)
-        : [...prev, dairyProductId]
-    );
+    // Only allow toggling if the ingredient is available
+    if (availableIngredientIds.has(dairyProductId)) {
+      setSelectedDairyProducts((prev) =>
+        prev.includes(dairyProductId)
+          ? prev.filter((id) => id !== dairyProductId)
+          : [...prev, dairyProductId]
+      );
+    }
   };
 
   const filteredProducts = products.filter((product) => {
@@ -41,38 +117,38 @@ export function useProductSearch(products: BreadProduct[]) {
       productName.includes(searchTerm) ||
       productIngredientNames.includes(searchTerm)
 
-    // Ingredient filter
+    // Category filter - products must be in selected categories
+    const categoryMatch =
+      selectedCategories.length === 0 ||
+      selectedCategories.includes(product.category)
+
+    // Ingredient filter - product must have ALL selected ingredients and they must be available
     const ingredientMatch =
       selectedIngredients.length === 0 ||
       selectedIngredients.every((selectedId) =>
-        product.ingredients.includes(selectedId)
+        product.ingredients.includes(selectedId) && availableIngredientIds.has(selectedId)
       )
 
-    // Allergen filter
+    // Dough type filter - product must have ALL selected dough types and they must be available
+    const doughTypeMatch =
+      selectedDoughTypes.length === 0 ||
+      selectedDoughTypes.every((selectedId) =>
+        product.ingredients.includes(selectedId) && availableIngredientIds.has(selectedId)
+      );
+
+    // Dairy product filter - product must have ALL selected dairy products and they must be available
+    const dairyProductMatch =
+      selectedDairyProducts.length === 0 ||
+      selectedDairyProducts.every((selectedId) =>
+        product.ingredients.includes(selectedId) && availableIngredientIds.has(selectedId)
+      );
+
+    // Allergen filter - this remains unchanged as allergens are independent of categories
     const allergenMatch =
       selectedAllergens.length === 0 ||
       selectedAllergens.every((selectedId) =>
         product.allergens.includes(selectedId)
       )
-
-    // Category filter
-    const categoryMatch =
-      selectedCategories.length === 0 ||
-      selectedCategories.includes(product.category)
-
-    // Dough type filter
-    const doughTypeMatch =
-      selectedDoughTypes.length === 0 ||
-      selectedDoughTypes.every((selectedId) =>
-        product.ingredients.includes(selectedId)
-      );
-
-    // Dairy product filter
-    const dairyProductMatch =
-      selectedDairyProducts.length === 0 ||
-      selectedDairyProducts.every((selectedId) =>
-        product.ingredients.includes(selectedId)
-      );
 
     return textMatch && ingredientMatch && allergenMatch && categoryMatch && doughTypeMatch && dairyProductMatch
   })
@@ -88,10 +164,28 @@ export function useProductSearch(products: BreadProduct[]) {
     selectedCategories,
     setSelectedCategories,
     selectedDoughTypes,
-    toggleDoughType,
+    setSelectedDoughTypes, // Also expose setter for clearing if needed
     selectedDairyProducts,
+    setSelectedDairyProducts, // Also expose setter for clearing if needed
+    toggleIngredient: (ingredientId: number) => { // Wrap original toggle to respect availability
+        if (availableIngredientIds.has(ingredientId)) {
+            setSelectedIngredients((prev) =>
+                prev.includes(ingredientId)
+                    ? prev.filter((id) => id !== ingredientId)
+                    : [...prev, ingredientId]
+            );
+        } else {
+            // If the ingredient is not available, ensure it's not selected
+            setSelectedIngredients((prev) => prev.filter((id) => id !== ingredientId));
+        }
+    },
+    toggleDoughType,
     toggleDairyProduct,
-    ALL_DOUGH_INGREDIENTS,
-    ALL_DAIRY_INGREDIENTS,
+    filteredAllIngredients,
+    filteredDoughIngredients,
+    filteredDairyIngredients,
+    availableIngredientIds, // Expose for UI to disable items
+    availableIngredientTypes, // Expose for UI to disable entire groups or types
+    selectedCategoryObjects: ALL_CATEGORIES.filter(cat => selectedCategories.includes(cat.id)), // Expose selected category objects
   }
 }

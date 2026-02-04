@@ -5,40 +5,51 @@ import React from "react"
 import { FilterGroup } from "./filter-group"
 
 interface FiltersProps {
-  allIngredients: Ingredient[]
+  allIngredients: Ingredient[] // These are now already filtered by useProductSearch
   allAllergens: Allergen[]
   allCategories: Category[]
-  allDoughIngredients: Ingredient[] // New prop
-  allDairyIngredients: Ingredient[] // New prop
+  allDoughIngredients: Ingredient[] // These are now already filtered by useProductSearch
+  allDairyIngredients: Ingredient[] // These are now already filtered by useProductSearch
   selectedIngredients: number[]
   selectedAllergens: number[]
   selectedCategories: number[]
-  selectedDoughTypes: number[] // New prop
-  selectedDairyProducts: number[] // New prop
+  selectedDoughTypes: number[]
+  selectedDairyProducts: number[]
   toggleIngredient: (ingredientId: number) => void
   toggleAllergen: (allergenId: number) => void
   toggleCategory: (categoryId: number) => void
-  toggleDoughType: (ingredientId: number) => void // New prop
-  toggleDairyProduct: (ingredientId: number) => void // New prop
+  toggleDoughType: (ingredientId: number) => void
+  toggleDairyProduct: (ingredientId: number) => void
+  availableIngredientIds: Set<number>; // New prop for disabling individual items
+  availableIngredientTypes: Set<'dough' | 'dairy' | 'other'>; // New prop for disabling entire groups
+  selectedCategoryObjects: Category[]; // New prop to pass selected category objects
 }
 
 export function Filters({
   allIngredients,
   allAllergens,
   allCategories,
-  allDoughIngredients, // Destructure new prop
-  allDairyIngredients, // Destructure new prop
+  allDoughIngredients,
+  allDairyIngredients,
   selectedIngredients,
   selectedAllergens,
   selectedCategories,
-  selectedDoughTypes, // Destructure new prop
-  selectedDairyProducts, // Destructure new prop
+  selectedDoughTypes,
+  selectedDairyProducts,
   toggleIngredient,
   toggleAllergen,
   toggleCategory,
-  toggleDoughType, // Destructure new prop
-  toggleDairyProduct // Destructure new prop
+  toggleDoughType,
+  toggleDairyProduct,
+  availableIngredientIds,
+  availableIngredientTypes,
+  selectedCategoryObjects,
 }: FiltersProps) {
+  // Determine if Dough Types filter group should be disabled
+  const isDoughFilterGroupDisabled = selectedCategoryObjects.length > 0 && !availableIngredientTypes.has('dough');
+  // Determine if Dairy Products filter group should be disabled
+  const isDairyFilterGroupDisabled = selectedCategoryObjects.length > 0 && !availableIngredientTypes.has('dairy');
+
   return (
     <>
       <FilterGroup
@@ -52,6 +63,7 @@ export function Filters({
         items={allIngredients}
         selectedItems={selectedIngredients}
         toggleItem={toggleIngredient}
+        availableItemIds={availableIngredientIds} // Pass for individual item disabling
       />
       <FilterGroup
         title="Allergens"
@@ -59,17 +71,21 @@ export function Filters({
         selectedItems={selectedAllergens}
         toggleItem={toggleAllergen}
       />
-      <FilterGroup // New FilterGroup for Dough Types
+      <FilterGroup
         title="Dough Types"
         items={allDoughIngredients}
         selectedItems={selectedDoughTypes}
         toggleItem={toggleDoughType}
+        availableItemIds={availableIngredientIds} // Pass for individual item disabling
+        isDisabled={isDoughFilterGroupDisabled}
       />
-      <FilterGroup // New FilterGroup for Dairy Products
+      <FilterGroup
         title="Dairy Products"
         items={allDairyIngredients}
         selectedItems={selectedDairyProducts}
         toggleItem={toggleDairyProduct}
+        availableItemIds={availableIngredientIds} // Pass for individual item disabling
+        isDisabled={isDairyFilterGroupDisabled}
       />
     </>
   )
