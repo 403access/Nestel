@@ -1,9 +1,8 @@
-import { type Allergen, GLUTEN, LACTOSE } from "./allergens"
-import { BREAD, BROETCHEN, type Category } from "./categories"
+import { GLUTEN, LACTOSE } from "./allergens"
+import { BREAD, BROETCHEN } from "./categories"
 import {
   DINKELVOLLKORNMEHL,
   HEFE,
-  type Ingredient,
   MILCH,
   ROGGENMEHL,
   SALZ,
@@ -13,55 +12,62 @@ import {
 } from "./ingredients"
 
 export interface BreadProduct {
-  id: string
+  id: number
   name: string
   thumbnail: any
   weight: string
-  allergens: Allergen[]
-  ingredients: Ingredient[]
+  allergens: number[]
+  ingredients: number[]
   availability: string[]
-  category: Category
+  category: number
 }
 
 export const mockBreadProducts: BreadProduct[] = [
   {
-    id: "1",
+    id: 1,
     name: "Dinkelvollkornbrot",
     thumbnail: require("@/assets/images/favicon.png"),
     weight: "500g",
-    allergens: [GLUTEN],
-    ingredients: [DINKELVOLLKORNMEHL, WASSER, HEFE, SALZ],
+    allergens: [GLUTEN.id],
+    ingredients: [DINKELVOLLKORNMEHL.id, WASSER.id, HEFE.id, SALZ.id],
     availability: ["Monday", "Wednesday", "Friday"],
-    category: BREAD
+    category: BREAD.id
   },
   {
-    id: "2",
+    id: 2,
     name: "Roggenbrot",
     thumbnail: require("@/assets/images/favicon.png"),
     weight: "750g",
-    allergens: [GLUTEN],
-    ingredients: [ROGGENMEHL, WASSER, SAUERTEIG, SALZ],
+    allergens: [GLUTEN.id],
+    ingredients: [ROGGENMEHL.id, WASSER.id, SAUERTEIG.id, SALZ.id],
     availability: ["Tuesday", "Thursday", "Saturday"],
-    category: BREAD
+    category: BREAD.id
   },
   {
-    id: "3",
+    id: 3,
     name: "Bauernbrot",
     thumbnail: require("@/assets/images/favicon.png"),
     weight: "1000g",
-    allergens: [GLUTEN, LACTOSE],
-    ingredients: [WEIZENMEHL, ROGGENMEHL, WASSER, HEFE, SALZ, MILCH],
+    allergens: [GLUTEN.id, LACTOSE.id],
+    ingredients: [
+      WEIZENMEHL.id,
+      ROGGENMEHL.id,
+      WASSER.id,
+      HEFE.id,
+      SALZ.id,
+      MILCH.id
+    ],
     availability: ["Daily"],
-    category: BREAD
+    category: BREAD.id
   },
   {
-    id: "4",
+    id: 4,
     name: "Brötchen",
     thumbnail: require("@/assets/images/favicon.png"),
     weight: "80g",
-    allergens: [GLUTEN],
-    ingredients: [WEIZENMEHL, WASSER, HEFE, SALZ],
+    allergens: [GLUTEN.id],
+    ingredients: [WEIZENMEHL.id, WASSER.id, HEFE.id, SALZ.id],
     availability: ["Daily"],
-    category: BROETCHEN
+    category: BROETCHEN.id
   }
 ]

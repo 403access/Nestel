@@ -8,12 +8,12 @@ interface FiltersProps {
   allIngredients: Ingredient[]
   allAllergens: Allergen[]
   allCategories: Category[]
-  selectedIngredients: Ingredient[]
-  selectedAllergens: Allergen[]
-  selectedCategories: Category[]
-  toggleIngredient: (ingredient: Ingredient) => void
-  toggleAllergen: (allergen: Allergen) => void
-  toggleCategory: (category: Category) => void
+  selectedIngredients: number[]
+  selectedAllergens: number[]
+  selectedCategories: number[]
+  toggleIngredient: (ingredientId: number) => void
+  toggleAllergen: (allergenId: number) => void
+  toggleCategory: (categoryId: number) => void
 }
 
 export function Filters({

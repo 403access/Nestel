@@ -1,26 +1,13 @@
 import { Filters } from "@/components/filters"
 import { ProductCard } from "@/components/product-card"
 import { SearchBar } from "@/components/search-bar"
-import type { Allergen } from "@/data/allergens"
-import * as Allergens from "@/data/allergens"
-import type { Category } from "@/data/categories"
-import * as Categories from "@/data/categories"
-import type { Ingredient } from "@/data/ingredients"
-import * as Ingredients from "@/data/ingredients"
+import { ALL_ALLERGENS } from "@/data/allergens"
+import { ALL_CATEGORIES } from "@/data/categories"
+import { ALL_INGREDIENTS } from "@/data/ingredients"
 import { mockBreadProducts } from "@/data/products"
 import { useProductSearch } from "@/hooks/use-product-search"
 import React from "react"
 import { FlatList, StyleSheet, View } from "react-native"
-
-const allIngredients = Object.values(Ingredients).filter(
-  (v) => typeof v === "string"
-) as Ingredient[]
-const allAllergens = Object.values(Allergens).filter(
-  (v) => typeof v === "string"
-) as Allergen[]
-const allCategories = Object.values(Categories).filter(
-  (v) => typeof v === "string"
-) as Category[]
 
 export default function ProductsScreen() {
   const {
@@ -35,27 +22,27 @@ export default function ProductsScreen() {
     setSelectedCategories
   } = useProductSearch(mockBreadProducts)
 
-  const toggleIngredient = (ingredient: Ingredient) => {
+  const toggleIngredient = (ingredientId: number) => {
     setSelectedIngredients((prev) =>
-      prev.includes(ingredient)
-        ? prev.filter((i) => i !== ingredient)
-        : [...prev, ingredient]
+      prev.includes(ingredientId)
+        ? prev.filter((id) => id !== ingredientId)
+        : [...prev, ingredientId]
     )
   }
 
-  const toggleAllergen = (allergen: Allergen) => {
+  const toggleAllergen = (allergenId: number) => {
     setSelectedAllergens((prev) =>
-      prev.includes(allergen)
-        ? prev.filter((a) => a !== allergen)
-        : [...prev, allergen]
+      prev.includes(allergenId)
+        ? prev.filter((id) => id !== allergenId)
+        : [...prev, allergenId]
     )
   }
 
-  const toggleCategory = (category: Category) => {
+  const toggleCategory = (categoryId: number) => {
     setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((c) => c !== category)
-        : [...prev, category]
+      prev.includes(categoryId)
+        ? prev.filter((id) => id !== categoryId)
+        : [...prev, categoryId]
     )
   }
 
@@ -63,9 +50,9 @@ export default function ProductsScreen() {
     <View style={styles.container}>
       <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <Filters
-        allIngredients={allIngredients}
-        allAllergens={allAllergens}
-        allCategories={allCategories}
+        allIngredients={ALL_INGREDIENTS}
+        allAllergens={ALL_ALLERGENS}
+        allCategories={ALL_CATEGORIES}
         selectedIngredients={selectedIngredients}
         selectedAllergens={selectedAllergens}
         selectedCategories={selectedCategories}
@@ -76,7 +63,7 @@ export default function ProductsScreen() {
       <FlatList
         data={filteredProducts}
         renderItem={({ item }) => <ProductCard product={item} />}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()} // Ensure key is string
         contentContainerStyle={styles.listContent}
       />
     </View>

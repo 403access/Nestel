@@ -1,20 +1,36 @@
+import { ALL_ALLERGENS } from "@/data/allergens"
+import { ALL_INGREDIENTS } from "@/data/ingredients"
+import type { BreadProduct } from "@/data/products"
 import React from "react"
 import { Image, StyleSheet, Text, View } from "react-native"
-import { BreadProduct } from "@/data/products"
 
 interface ProductCardProps {
   product: BreadProduct
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const getIngredientNames = (ingredientIds: number[]) => {
+    return ingredientIds
+      .map((id) => ALL_INGREDIENTS.find((ing) => ing.id === id)?.name)
+      .filter(Boolean)
+      .join(", ")
+  }
+
+  const getAllergenNames = (allergenIds: number[]) => {
+    return allergenIds
+      .map((id) => ALL_ALLERGENS.find((alg) => alg.id === id)?.name)
+      .filter(Boolean)
+      .join(", ")
+  }
+
   return (
     <View style={styles.productCard}>
       <Image source={product.thumbnail} style={styles.thumbnail} />
       <View style={styles.details}>
         <Text style={styles.productName}>{product.name}</Text>
         <Text>Weight: {product.weight}</Text>
-        <Text>Allergens: {product.allergens.join(", ")}</Text>
-        <Text>Ingredients: {product.ingredients.join(", ")}</Text>
+        <Text>Allergens: {getAllergenNames(product.allergens)}</Text>
+        <Text>Ingredients: {getIngredientNames(product.ingredients)}</Text>
         <Text>Available: {product.availability.join(", ")}</Text>
       </View>
     </View>

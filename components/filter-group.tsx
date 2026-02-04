@@ -1,20 +1,21 @@
 import React from "react"
 import {
-  ScrollView,
   StyleSheet,
+  View,
   Text,
   TouchableOpacity,
-  View
+  ScrollView
 } from "react-native"
 
-interface FilterGroupProps<T extends string> {
+interface FilterGroupProps<T extends { id: number; name: string }> {
+  // Changed T.id to number
   title: string
   items: T[]
-  selectedItems: T[]
-  toggleItem: (item: T) => void
+  selectedItems: number[] // now an array of IDs (numbers)
+  toggleItem: (itemId: number) => void // now toggles by ID (number)
 }
 
-export function FilterGroup<T extends string>({
+export function FilterGroup<T extends { id: number; name: string }>({
   title,
   items,
   selectedItems,
@@ -26,14 +27,14 @@ export function FilterGroup<T extends string>({
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {items.map((item) => (
           <TouchableOpacity
-            key={item}
+            key={item.id}
             style={[
               styles.filterButton,
-              selectedItems.includes(item) && styles.filterButtonSelected
+              selectedItems.includes(item.id) && styles.filterButtonSelected
             ]}
-            onPress={() => toggleItem(item)}
+            onPress={() => toggleItem(item.id)}
           >
-            <Text style={styles.filterButtonText}>{item}</Text>
+            <Text style={styles.filterButtonText}>{item.name}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
