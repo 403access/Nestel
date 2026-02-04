@@ -1,12 +1,12 @@
-import React from 'react';
-import { Image } from 'react-native';
-import { ThemedText as Text } from '@/components/themed-text';
-import { ThemedView as View } from '@/components/themed-view';
-import { BreadProduct } from '@/data/products';
-import { quizStyles as styles } from '@/styles/quiz.styles';
+import React from "react"
+import { Image } from "react-native"
+import { ThemedText as Text } from "@/components/themed-text"
+import { ThemedView as View } from "@/components/themed-view"
+import { BreadProduct } from "@/data/products"
+import { quizStyles as styles } from "@/styles/quiz.styles"
 
 interface ProductCardProps {
-  product: BreadProduct;
+  product: BreadProduct
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
@@ -15,5 +15,5 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <Image source={product.thumbnail} style={styles.thumbnail} />
       <Text style={styles.productName}>{product.name}</Text>
     </View>
-  );
-};
+  )
+}

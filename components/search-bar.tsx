@@ -4,10 +4,14 @@ import { StyleSheet, TextInput, TextStyle } from "react-native"
 interface SearchBarProps {
   searchQuery: string
   setSearchQuery: (query: string) => void
-  style?: TextStyle;
+  style?: TextStyle
 }
 
-export function SearchBar({ searchQuery, setSearchQuery, style }: SearchBarProps) {
+export function SearchBar({
+  searchQuery,
+  setSearchQuery,
+  style
+}: SearchBarProps) {
   return (
     <TextInput
       style={[styles.searchInput, style]} // Apply external style

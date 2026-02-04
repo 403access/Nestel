@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { FlatList, StyleSheet, View, Pressable } from "react-native"
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaView } from "react-native-safe-area-context"
+import { Ionicons } from "@expo/vector-icons"
 import { Filters } from "@/components/filters"
 import { ProductCard } from "@/components/product-card"
 import { SearchBar } from "@/components/search-bar"
@@ -35,32 +35,40 @@ export function ProductsScreen() {
     selectedMenus,
     setSelectedMenus,
     toggleMenu,
-    ALL_MENUS,
+    ALL_MENUS
   } = useProductSearch(mockBreadProducts)
 
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(false)
 
   // Helper function to calculate price based on selected menus
-  const getPriceInfo = (product: typeof filteredProducts[0]) => {
-    let currentPrice = product.price;
-    const originalPrice = product.price;
+  const getPriceInfo = (product: (typeof filteredProducts)[0]) => {
+    let currentPrice = product.price
+    const originalPrice = product.price
 
-    if (selectedMenus.length > 0 && product.menuIds && product.menuIds.length > 0) {
+    if (
+      selectedMenus.length > 0 &&
+      product.menuIds &&
+      product.menuIds.length > 0
+    ) {
       // Find the best discount from selected menus
       for (const menuId of selectedMenus) {
-        const menu = ALL_MENUS.find(m => m.id === menuId);
-        if (menu && menu.offers) { // Check for offers array
-          for (const offer of menu.offers) { // Iterate through offers
-            const menuItem = offer.items.find(item => item.productId === product.id);
+        const menu = ALL_MENUS.find((m) => m.id === menuId)
+        if (menu && menu.offers) {
+          // Check for offers array
+          for (const offer of menu.offers) {
+            // Iterate through offers
+            const menuItem = offer.items.find(
+              (item) => item.productId === product.id
+            )
             if (menuItem && menuItem.discountPrice !== undefined) {
-              currentPrice = Math.min(currentPrice, menuItem.discountPrice);
+              currentPrice = Math.min(currentPrice, menuItem.discountPrice)
             }
           }
         }
       }
     }
-    return { currentPrice, originalPrice };
-  };
+    return { currentPrice, originalPrice }
+  }
 
   const toggleIngredient = (ingredientId: number) => {
     setSelectedIngredients((prev) =>
@@ -89,9 +97,20 @@ export function ProductsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} style={styles.searchBar} />
-        <Pressable onPress={() => setShowFilters(prev => !prev)} style={styles.filterButton}>
-          <Ionicons name={showFilters ? "options" : "options-outline"} size={24} color="black" />
+        <SearchBar
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          style={styles.searchBar}
+        />
+        <Pressable
+          onPress={() => setShowFilters((prev) => !prev)}
+          style={styles.filterButton}
+        >
+          <Ionicons
+            name={showFilters ? "options" : "options-outline"}
+            size={24}
+            color="black"
+          />
         </Pressable>
       </View>
       {showFilters && (
@@ -122,8 +141,14 @@ export function ProductsScreen() {
       <FlatList
         data={filteredProducts}
         renderItem={({ item }) => {
-          const { currentPrice, originalPrice } = getPriceInfo(item);
-          return <ProductCard product={item} currentPrice={currentPrice} originalPrice={originalPrice} />;
+          const { currentPrice, originalPrice } = getPriceInfo(item)
+          return (
+            <ProductCard
+              product={item}
+              currentPrice={currentPrice}
+              originalPrice={originalPrice}
+            />
+          )
         }}
         keyExtractor={(item) => item.id.toString()} // Ensure key is string
         contentContainerStyle={styles.listContent}
@@ -139,20 +164,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0"
   },
   headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 10,
     marginHorizontal: 10, // Re-added margin
     paddingRight: 10
   },
   filterButton: {
     marginLeft: 10,
-    padding: 8,
+    padding: 8
   },
   listContent: {
     paddingHorizontal: 10
   },
   searchBar: {
-    flex: 1,
+    flex: 1
   }
 })

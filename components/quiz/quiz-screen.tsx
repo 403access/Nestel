@@ -1,15 +1,15 @@
-import React from 'react';
-import { ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { ThemedText as Text } from '@/components/themed-text';
-import { ThemedView as View } from '@/components/themed-view';
-import { ALL_INGREDIENTS } from '@/data/ingredients';
-import { quizStyles as styles } from '@/styles/quiz.styles';
-import { useQuizGame } from '@/hooks/use-quiz-game';
-import { ProductCard } from '@/components/quiz/ProductCard';
-import { IngredientPill } from '@/components/quiz/IngredientPill';
-import { QuizHeader } from '@/components/quiz/QuizHeader';
-import { QuizControls } from '@/components/quiz/QuizControls';
+import React from "react"
+import { ScrollView } from "react-native"
+import { SafeAreaView } from "react-native-safe-area-context"
+import { ThemedText as Text } from "@/components/themed-text"
+import { ThemedView as View } from "@/components/themed-view"
+import { ALL_INGREDIENTS } from "@/data/ingredients"
+import { quizStyles as styles } from "@/styles/quiz.styles"
+import { useQuizGame } from "@/hooks/use-quiz-game"
+import { ProductCard } from "@/components/quiz/ProductCard"
+import { IngredientPill } from "@/components/quiz/IngredientPill"
+import { QuizHeader } from "@/components/quiz/QuizHeader"
+import { QuizControls } from "@/components/quiz/QuizControls"
 
 export function QuizScreen() {
   const {
@@ -20,11 +20,15 @@ export function QuizScreen() {
     answered,
     loadNewQuestion,
     toggleIngredientSelection,
-    checkAnswer,
-  } = useQuizGame();
+    checkAnswer
+  } = useQuizGame()
 
   if (!currentProduct) {
-    return <View style={styles.container}><Text>Loading quiz...</Text></View>;
+    return (
+      <View style={styles.container}>
+        <Text>Loading quiz...</Text>
+      </View>
+    )
   }
 
   return (
@@ -37,13 +41,19 @@ export function QuizScreen() {
         <View style={styles.ingredientSelection}>
           <Text style={styles.sectionTitle}>Select all ingredients:</Text>
           <View style={styles.ingredientGrid}>
-            {ALL_INGREDIENTS.map(ingredient => (
+            {ALL_INGREDIENTS.map((ingredient) => (
               <IngredientPill
                 key={ingredient.id}
                 ingredient={ingredient}
                 isSelected={selectedIngredients.has(ingredient.id)}
-                isCorrect={answered && currentProduct.ingredients.includes(ingredient.id)}
-                isIncorrect={answered && !currentProduct.ingredients.includes(ingredient.id) && selectedIngredients.has(ingredient.id)}
+                isCorrect={
+                  answered && currentProduct.ingredients.includes(ingredient.id)
+                }
+                isIncorrect={
+                  answered &&
+                  !currentProduct.ingredients.includes(ingredient.id) &&
+                  selectedIngredients.has(ingredient.id)
+                }
                 onPress={toggleIngredientSelection}
                 disabled={answered}
               />
@@ -58,5 +68,5 @@ export function QuizScreen() {
         />
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }

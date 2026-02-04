@@ -11,22 +11,22 @@ interface FiltersProps {
   allCategories: Category[]
   allDoughIngredients: Ingredient[]
   allDairyIngredients: Ingredient[]
-  allMenus: Menu[];
+  allMenus: Menu[]
   selectedIngredients: number[]
   selectedAllergens: number[]
   selectedCategories: number[]
   selectedDoughTypes: number[]
   selectedDairyProducts: number[]
-  selectedMenus: number[];
+  selectedMenus: number[]
   toggleIngredient: (ingredientId: number) => void
   toggleAllergen: (allergenId: number) => void
   toggleCategory: (categoryId: number) => void
   toggleDoughType: (ingredientId: number) => void
   toggleDairyProduct: (ingredientId: number) => void
-  toggleMenu: (menuId: number) => void;
-  availableIngredientIds: Set<number>;
-  availableIngredientTypes: Set<'dough' | 'dairy' | 'other'>;
-  selectedCategoryObjects: Category[];
+  toggleMenu: (menuId: number) => void
+  availableIngredientIds: Set<number>
+  availableIngredientTypes: Set<"dough" | "dairy" | "other">
+  selectedCategoryObjects: Category[]
 }
 
 export function Filters({
@@ -50,10 +50,12 @@ export function Filters({
   toggleMenu,
   availableIngredientIds,
   availableIngredientTypes,
-  selectedCategoryObjects,
+  selectedCategoryObjects
 }: FiltersProps) {
-  const isDoughFilterGroupDisabled = selectedCategoryObjects.length > 0 && !availableIngredientTypes.has('dough');
-  const isDairyFilterGroupDisabled = selectedCategoryObjects.length > 0 && !availableIngredientTypes.has('dairy');
+  const isDoughFilterGroupDisabled =
+    selectedCategoryObjects.length > 0 && !availableIngredientTypes.has("dough")
+  const isDairyFilterGroupDisabled =
+    selectedCategoryObjects.length > 0 && !availableIngredientTypes.has("dairy")
 
   return (
     <>

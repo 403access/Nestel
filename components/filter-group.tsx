@@ -25,11 +25,17 @@ export function FilterGroup<T extends { id: number; name: string }>({
   isDisabled = false // Default to false
 }: FilterGroupProps<T>) {
   return (
-    <View style={[styles.filterContainer, isDisabled && styles.filterContainerDisabled]}>
+    <View
+      style={[
+        styles.filterContainer,
+        isDisabled && styles.filterContainerDisabled
+      ]}
+    >
       <Text style={styles.filterTitle}>{title}</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {items.map((item) => {
-          const isItemDisabled = isDisabled || (availableItemIds && !availableItemIds.has(item.id));
+          const isItemDisabled =
+            isDisabled || (availableItemIds && !availableItemIds.has(item.id))
           return (
             <TouchableOpacity
               key={item.id}
@@ -41,9 +47,16 @@ export function FilterGroup<T extends { id: number; name: string }>({
               onPress={() => toggleItem(item.id)}
               disabled={isItemDisabled}
             >
-              <Text style={[styles.filterButtonText, isItemDisabled && styles.filterButtonTextDisabled]}>{item.name}</Text>
+              <Text
+                style={[
+                  styles.filterButtonText,
+                  isItemDisabled && styles.filterButtonTextDisabled
+                ]}
+              >
+                {item.name}
+              </Text>
             </TouchableOpacity>
-          );
+          )
         })}
       </ScrollView>
     </View>
@@ -56,7 +69,7 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   filterContainerDisabled: {
-    opacity: 0.5,
+    opacity: 0.5
   },
   filterTitle: {
     fontSize: 16,
@@ -78,12 +91,12 @@ const styles = StyleSheet.create({
   },
   filterButtonDisabled: {
     backgroundColor: "#e0e0e0",
-    borderColor: "#bbb",
+    borderColor: "#bbb"
   },
   filterButtonText: {
     color: "#333"
   },
   filterButtonTextDisabled: {
-    color: "#888",
+    color: "#888"
   }
 })

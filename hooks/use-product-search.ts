@@ -1,8 +1,8 @@
 import { useState, useMemo, useEffect } from "react"
 import { ALL_INGREDIENTS, Ingredient } from "@/data/ingredients"
 import type { BreadProduct } from "@/data/products"
-import { ALL_CATEGORIES, Category } from "@/data/categories";
-import { ALL_MENUS, Menu } from "@/data/menus"; // Import ALL_MENUS and Menu
+import { ALL_CATEGORIES, Category } from "@/data/categories"
+import { ALL_MENUS, Menu } from "@/data/menus" // Import ALL_MENUS and Menu
 
 export function useProductSearch(products: BreadProduct[]) {
   const [searchQuery, setSearchQuery] = useState("")
@@ -10,85 +10,93 @@ export function useProductSearch(products: BreadProduct[]) {
   const [selectedAllergens, setSelectedAllergens] = useState<number[]>([])
   const [selectedCategories, setSelectedCategories] = useState<number[]>([])
   const [selectedDoughTypes, setSelectedDoughTypes] = useState<number[]>([])
-  const [selectedDairyProducts, setSelectedDairyProducts] = useState<number[]>([])
-  const [selectedMenus, setSelectedMenus] = useState<number[]>([]); // New state for selected menus
+  const [selectedDairyProducts, setSelectedDairyProducts] = useState<number[]>(
+    []
+  )
+  const [selectedMenus, setSelectedMenus] = useState<number[]>([]) // New state for selected menus
 
   const { availableIngredientIds, availableIngredientTypes } = useMemo(() => {
     if (selectedCategories.length === 0) {
       return {
-        availableIngredientIds: new Set(ALL_INGREDIENTS.map(ing => ing.id)),
-        availableIngredientTypes: new Set(['dough', 'dairy', 'other'] as const),
-      };
+        availableIngredientIds: new Set(ALL_INGREDIENTS.map((ing) => ing.id)),
+        availableIngredientTypes: new Set(["dough", "dairy", "other"] as const)
+      }
     }
 
-    const currentCategories = ALL_CATEGORIES.filter(cat => selectedCategories.includes(cat.id));
-    const allowedIds = new Set<number>();
-    const allowedTypes = new Set<'dough' | 'dairy' | 'other'>();
+    const currentCategories = ALL_CATEGORIES.filter((cat) =>
+      selectedCategories.includes(cat.id)
+    )
+    const allowedIds = new Set<number>()
+    const allowedTypes = new Set<"dough" | "dairy" | "other">()
 
-    currentCategories.forEach(cat => {
+    currentCategories.forEach((cat) => {
       if (cat.allowedIngredientIds) {
-        cat.allowedIngredientIds.forEach(id => allowedIds.add(id));
+        cat.allowedIngredientIds.forEach((id) => allowedIds.add(id))
       }
       if (cat.allowedIngredientTypes) {
-        cat.allowedIngredientTypes.forEach(type => allowedTypes.add(type));
+        cat.allowedIngredientTypes.forEach((type) => allowedTypes.add(type))
       }
-    });
+    })
 
-    return { availableIngredientIds: allowedIds, availableIngredientTypes: allowedTypes };
-  }, [selectedCategories]);
+    return {
+      availableIngredientIds: allowedIds,
+      availableIngredientTypes: allowedTypes
+    }
+  }, [selectedCategories])
 
   // Effect to deselect ingredients that are no longer available
   useEffect(() => {
-    setSelectedIngredients(prev =>
-      prev.filter(id => availableIngredientIds.has(id))
-    );
-  }, [availableIngredientIds]);
+    setSelectedIngredients((prev) =>
+      prev.filter((id) => availableIngredientIds.has(id))
+    )
+  }, [availableIngredientIds])
 
   // Effect to deselect dough types that are no longer available
   useEffect(() => {
-    setSelectedDoughTypes(prev =>
-      prev.filter(id => availableIngredientIds.has(id))
-    );
-  }, [availableIngredientIds]);
+    setSelectedDoughTypes((prev) =>
+      prev.filter((id) => availableIngredientIds.has(id))
+    )
+  }, [availableIngredientIds])
 
   // Effect to deselect dairy products that are no longer available
   useEffect(() => {
-    setSelectedDairyProducts(prev =>
-      prev.filter(id => availableIngredientIds.has(id))
-    );
-  }, [availableIngredientIds]);
+    setSelectedDairyProducts((prev) =>
+      prev.filter((id) => availableIngredientIds.has(id))
+    )
+  }, [availableIngredientIds])
 
   // Effect to deselect menus that are no longer valid (e.g., if ALL_MENUS data changes)
   useEffect(() => {
-    setSelectedMenus(prev => prev.filter(id => ALL_MENUS.some(menu => menu.id === id)));
-  }, []); // Run once on mount or if ALL_MENUS changes (though it's a constant)
+    setSelectedMenus((prev) =>
+      prev.filter((id) => ALL_MENUS.some((menu) => menu.id === id))
+    )
+  }, []) // Run once on mount or if ALL_MENUS changes (though it's a constant)
 
   // Return ALL_INGREDIENTS with dough/dairy removed, without considering category availability
   const filteredAllIngredients = useMemo(() => {
-    const doughTypeIds = ALL_INGREDIENTS.filter(ing => ing.type === 'dough').map(ing => ing.id);
-    const dairyTypeIds = ALL_INGREDIENTS.filter(ing => ing.type === 'dairy').map(ing => ing.id);
+    const doughTypeIds = ALL_INGREDIENTS.filter(
+      (ing) => ing.type === "dough"
+    ).map((ing) => ing.id)
+    const dairyTypeIds = ALL_INGREDIENTS.filter(
+      (ing) => ing.type === "dairy"
+    ).map((ing) => ing.id)
 
     return ALL_INGREDIENTS.filter(
       (ingredient) =>
         !doughTypeIds.includes(ingredient.id) &&
         !dairyTypeIds.includes(ingredient.id)
-    );
-  }, []);
+    )
+  }, [])
 
   // Return ALL_INGREDIENTS of type 'dough', without considering category availability
   const filteredDoughIngredients = useMemo(() => {
-    return ALL_INGREDIENTS.filter(
-      (ing) => ing.type === 'dough'
-    );
-  }, []);
+    return ALL_INGREDIENTS.filter((ing) => ing.type === "dough")
+  }, [])
 
   // Return ALL_INGREDIENTS of type 'dairy', without considering category availability
   const filteredDairyIngredients = useMemo(() => {
-    return ALL_INGREDIENTS.filter(
-      (ing) => ing.type === 'dairy'
-    );
-  }, []);
-
+    return ALL_INGREDIENTS.filter((ing) => ing.type === "dairy")
+  }, [])
 
   const toggleDoughType = (doughTypeId: number) => {
     if (availableIngredientIds.has(doughTypeId)) {
@@ -96,9 +104,9 @@ export function useProductSearch(products: BreadProduct[]) {
         prev.includes(doughTypeId)
           ? prev.filter((id) => id !== doughTypeId)
           : [...prev, doughTypeId]
-      );
+      )
     }
-  };
+  }
 
   const toggleDairyProduct = (dairyProductId: number) => {
     if (availableIngredientIds.has(dairyProductId)) {
@@ -106,15 +114,17 @@ export function useProductSearch(products: BreadProduct[]) {
         prev.includes(dairyProductId)
           ? prev.filter((id) => id !== dairyProductId)
           : [...prev, dairyProductId]
-      );
+      )
     }
-  };
+  }
 
   const toggleMenu = (menuId: number) => {
     setSelectedMenus((prev) =>
-      prev.includes(menuId) ? prev.filter((id) => id !== menuId) : [...prev, menuId]
-    );
-  };
+      prev.includes(menuId)
+        ? prev.filter((id) => id !== menuId)
+        : [...prev, menuId]
+    )
+  }
 
   const filteredProducts = products.filter((product) => {
     const searchTerm = searchQuery.toLowerCase()
@@ -133,21 +143,27 @@ export function useProductSearch(products: BreadProduct[]) {
 
     const ingredientMatch =
       selectedIngredients.length === 0 ||
-      selectedIngredients.every((selectedId) =>
-        product.ingredients.includes(selectedId) && availableIngredientIds.has(selectedId)
+      selectedIngredients.every(
+        (selectedId) =>
+          product.ingredients.includes(selectedId) &&
+          availableIngredientIds.has(selectedId)
       )
 
     const doughTypeMatch =
       selectedDoughTypes.length === 0 ||
-      selectedDoughTypes.every((selectedId) =>
-        product.ingredients.includes(selectedId) && availableIngredientIds.has(selectedId)
-      );
+      selectedDoughTypes.every(
+        (selectedId) =>
+          product.ingredients.includes(selectedId) &&
+          availableIngredientIds.has(selectedId)
+      )
 
     const dairyProductMatch =
       selectedDairyProducts.length === 0 ||
-      selectedDairyProducts.every((selectedId) =>
-        product.ingredients.includes(selectedId) && availableIngredientIds.has(selectedId)
-      );
+      selectedDairyProducts.every(
+        (selectedId) =>
+          product.ingredients.includes(selectedId) &&
+          availableIngredientIds.has(selectedId)
+      )
 
     const allergenMatch =
       selectedAllergens.length === 0 ||
@@ -158,9 +174,17 @@ export function useProductSearch(products: BreadProduct[]) {
     // New Menu filter
     const menuMatch =
       selectedMenus.length === 0 ||
-      selectedMenus.some((selectedId) => product.menuIds?.includes(selectedId));
+      selectedMenus.some((selectedId) => product.menuIds?.includes(selectedId))
 
-    return textMatch && ingredientMatch && allergenMatch && categoryMatch && doughTypeMatch && dairyProductMatch && menuMatch
+    return (
+      textMatch &&
+      ingredientMatch &&
+      allergenMatch &&
+      categoryMatch &&
+      doughTypeMatch &&
+      dairyProductMatch &&
+      menuMatch
+    )
   })
 
   return {
@@ -180,15 +204,17 @@ export function useProductSearch(products: BreadProduct[]) {
     selectedMenus,
     setSelectedMenus,
     toggleIngredient: (ingredientId: number) => {
-        if (availableIngredientIds.has(ingredientId)) {
-            setSelectedIngredients((prev) =>
-                prev.includes(ingredientId)
-                    ? prev.filter((id) => id !== ingredientId)
-                    : [...prev, ingredientId]
-            );
-        } else {
-            setSelectedIngredients((prev) => prev.filter((id) => id !== ingredientId));
-        }
+      if (availableIngredientIds.has(ingredientId)) {
+        setSelectedIngredients((prev) =>
+          prev.includes(ingredientId)
+            ? prev.filter((id) => id !== ingredientId)
+            : [...prev, ingredientId]
+        )
+      } else {
+        setSelectedIngredients((prev) =>
+          prev.filter((id) => id !== ingredientId)
+        )
+      }
     },
     toggleDoughType,
     toggleDairyProduct,
@@ -198,7 +224,9 @@ export function useProductSearch(products: BreadProduct[]) {
     filteredDairyIngredients,
     availableIngredientIds,
     availableIngredientTypes,
-    selectedCategoryObjects: ALL_CATEGORIES.filter(cat => selectedCategories.includes(cat.id)),
-    ALL_MENUS, // Expose ALL_MENUS for the UI
+    selectedCategoryObjects: ALL_CATEGORIES.filter((cat) =>
+      selectedCategories.includes(cat.id)
+    ),
+    ALL_MENUS // Expose ALL_MENUS for the UI
   }
 }
