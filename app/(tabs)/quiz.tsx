@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText as Text } from '@/components/themed-text';
 import { ThemedView as View } from '@/components/themed-view';
 import { ALL_INGREDIENTS } from '@/data/ingredients';
@@ -27,7 +28,7 @@ export default function QuizScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={[styles.container, { flex: 1 }]}>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <QuizHeader score={score} questionCount={questionCount} />
 
@@ -56,6 +57,6 @@ export default function QuizScreen() {
           onNextQuestion={loadNewQuestion}
         />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

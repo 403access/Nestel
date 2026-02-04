@@ -8,6 +8,7 @@ import { mockBreadProducts } from "@/data/products"
 import { useProductSearch } from "@/hooks/use-product-search"
 import React from "react"
 import { FlatList, StyleSheet, View } from "react-native"
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProductsScreen() {
   const {
@@ -47,7 +48,7 @@ export default function ProductsScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <Filters
         allIngredients={ALL_INGREDIENTS}
@@ -66,7 +67,7 @@ export default function ProductsScreen() {
         keyExtractor={(item) => item.id.toString()} // Ensure key is string
         contentContainerStyle={styles.listContent}
       />
-    </View>
+    </SafeAreaView>
   )
 }
 
