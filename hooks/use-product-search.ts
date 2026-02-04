@@ -7,7 +7,7 @@ export function useProductSearch(products: BreadProduct[]) {
   const filteredProducts = products.filter((product) => {
     const searchTerm = searchQuery.toLowerCase()
     const productName = product.name.toLowerCase()
-    const productIngredients = product.ingredients.toLowerCase()
+    const productIngredients = product.ingredients.join(", ").toLowerCase()
 
     return (
       productName.includes(searchTerm) ||

@@ -14,7 +14,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <Text style={styles.productName}>{product.name}</Text>
         <Text>Weight: {product.weight}</Text>
         <Text>Allergens: {product.allergens.join(", ")}</Text>
-        <Text>Ingredients: {product.ingredients}</Text>
+        <Text>Ingredients: {product.ingredients.join(", ")}</Text>
         <Text>Available: {product.availability.join(", ")}</Text>
       </View>
     </View>
