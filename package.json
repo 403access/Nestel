@@ -8,6 +8,7 @@
     "android": "expo run:android",
     "prebuild": "expo prebuild",
     "ios": "expo run:ios",
+    "ios:device": "expo run:ios -d",
     "ios:dev": "eas build --platform ios --profile development",
     "web": "expo start --web",
     "format": "bunx --bun biome format --write ./",
