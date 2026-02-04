@@ -28,6 +28,15 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="menus"
+        options={{
+          title: "Menus",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="menucard" color={color} /> // Using 'menucard' icon
+          )
+        }}
+      />
+      <Tabs.Screen
         name="quiz"
         options={{
           title: "Quiz",

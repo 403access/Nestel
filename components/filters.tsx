@@ -1,28 +1,32 @@
 import type { Allergen } from "@/data/allergens"
 import type { Category } from "@/data/categories"
 import type { Ingredient } from "@/data/ingredients"
+import type { Menu } from "@/data/menus"
 import React from "react"
 import { FilterGroup } from "./filter-group"
 
 interface FiltersProps {
-  allIngredients: Ingredient[] // These are now already filtered by useProductSearch
+  allIngredients: Ingredient[]
   allAllergens: Allergen[]
   allCategories: Category[]
-  allDoughIngredients: Ingredient[] // These are now already filtered by useProductSearch
-  allDairyIngredients: Ingredient[] // These are now already filtered by useProductSearch
+  allDoughIngredients: Ingredient[]
+  allDairyIngredients: Ingredient[]
+  allMenus: Menu[];
   selectedIngredients: number[]
   selectedAllergens: number[]
   selectedCategories: number[]
   selectedDoughTypes: number[]
   selectedDairyProducts: number[]
+  selectedMenus: number[];
   toggleIngredient: (ingredientId: number) => void
   toggleAllergen: (allergenId: number) => void
   toggleCategory: (categoryId: number) => void
   toggleDoughType: (ingredientId: number) => void
   toggleDairyProduct: (ingredientId: number) => void
-  availableIngredientIds: Set<number>; // New prop for disabling individual items
-  availableIngredientTypes: Set<'dough' | 'dairy' | 'other'>; // New prop for disabling entire groups
-  selectedCategoryObjects: Category[]; // New prop to pass selected category objects
+  toggleMenu: (menuId: number) => void;
+  availableIngredientIds: Set<number>;
+  availableIngredientTypes: Set<'dough' | 'dairy' | 'other'>;
+  selectedCategoryObjects: Category[];
 }
 
 export function Filters({
@@ -31,23 +35,24 @@ export function Filters({
   allCategories,
   allDoughIngredients,
   allDairyIngredients,
+  allMenus,
   selectedIngredients,
   selectedAllergens,
   selectedCategories,
   selectedDoughTypes,
   selectedDairyProducts,
+  selectedMenus,
   toggleIngredient,
   toggleAllergen,
   toggleCategory,
   toggleDoughType,
   toggleDairyProduct,
+  toggleMenu,
   availableIngredientIds,
   availableIngredientTypes,
   selectedCategoryObjects,
 }: FiltersProps) {
-  // Determine if Dough Types filter group should be disabled
   const isDoughFilterGroupDisabled = selectedCategoryObjects.length > 0 && !availableIngredientTypes.has('dough');
-  // Determine if Dairy Products filter group should be disabled
   const isDairyFilterGroupDisabled = selectedCategoryObjects.length > 0 && !availableIngredientTypes.has('dairy');
 
   return (
@@ -63,7 +68,7 @@ export function Filters({
         items={allIngredients}
         selectedItems={selectedIngredients}
         toggleItem={toggleIngredient}
-        availableItemIds={availableIngredientIds} // Pass for individual item disabling
+        availableItemIds={availableIngredientIds}
       />
       <FilterGroup
         title="Allergens"
@@ -76,7 +81,7 @@ export function Filters({
         items={allDoughIngredients}
         selectedItems={selectedDoughTypes}
         toggleItem={toggleDoughType}
-        availableItemIds={availableIngredientIds} // Pass for individual item disabling
+        availableItemIds={availableIngredientIds}
         isDisabled={isDoughFilterGroupDisabled}
       />
       <FilterGroup
@@ -84,8 +89,14 @@ export function Filters({
         items={allDairyIngredients}
         selectedItems={selectedDairyProducts}
         toggleItem={toggleDairyProduct}
-        availableItemIds={availableIngredientIds} // Pass for individual item disabling
+        availableItemIds={availableIngredientIds}
         isDisabled={isDairyFilterGroupDisabled}
+      />
+      <FilterGroup
+        title="Menus"
+        items={allMenus}
+        selectedItems={selectedMenus}
+        toggleItem={toggleMenu}
       />
     </>
   )

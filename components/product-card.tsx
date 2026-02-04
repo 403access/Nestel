@@ -5,10 +5,12 @@ import React from "react"
 import { Image, StyleSheet, Text, View } from "react-native"
 
 interface ProductCardProps {
-  product: BreadProduct
+  product: BreadProduct;
+  currentPrice: number;
+  originalPrice?: number;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, currentPrice, originalPrice }: ProductCardProps) {
   const getIngredientNames = (ingredientIds: number[]) => {
     return ingredientIds
       .map((id) => ALL_INGREDIENTS.find((ing) => ing.id === id)?.name)
@@ -32,6 +34,12 @@ export function ProductCard({ product }: ProductCardProps) {
         <Text>Allergens: {getAllergenNames(product.allergens)}</Text>
         <Text>Ingredients: {getIngredientNames(product.ingredients)}</Text>
         <Text>Available: {product.availability.join(", ")}</Text>
+        <View style={styles.priceContainer}>
+          {originalPrice && originalPrice > currentPrice && (
+            <Text style={styles.originalPriceStrikethrough}>€{originalPrice.toFixed(2)}</Text>
+          )}
+          <Text style={styles.priceText}>€{currentPrice.toFixed(2)}</Text>
+        </View>
       </View>
     </View>
   )
@@ -65,5 +73,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 5
-  }
+  },
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  priceText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  originalPriceStrikethrough: {
+    fontSize: 14,
+    color: '#888',
+    textDecorationLine: 'line-through',
+    marginRight: 5,
+  },
 })

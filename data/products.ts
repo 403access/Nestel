@@ -10,6 +10,7 @@ import {
   WASSER,
   WEIZENMEHL
 } from "./ingredients"
+import { ALL_MENUS, BREAKFAST_MENU, LUNCH_MENU, DINNER_MENU } from "./menus" // Import ALL_MENUS and individual menus
 
 export interface BreadProduct {
   id: number
@@ -20,6 +21,8 @@ export interface BreadProduct {
   ingredients: number[]
   availability: string[]
   category: number
+  menuIds?: number[]
+  price: number // New mandatory property
 }
 
 export const mockBreadProducts: BreadProduct[] = [
@@ -31,7 +34,9 @@ export const mockBreadProducts: BreadProduct[] = [
     allergens: [GLUTEN.id],
     ingredients: [DINKELVOLLKORNMEHL.id, WASSER.id, HEFE.id, SALZ.id],
     availability: ["Monday", "Wednesday", "Friday"],
-    category: BREAD.id
+    category: BREAD.id,
+    menuIds: [LUNCH_MENU.id, DINNER_MENU.id],
+    price: 4.50 // Example price
   },
   {
     id: 2,
@@ -41,7 +46,9 @@ export const mockBreadProducts: BreadProduct[] = [
     allergens: [GLUTEN.id],
     ingredients: [ROGGENMEHL.id, WASSER.id, SAUERTEIG.id, SALZ.id],
     availability: ["Tuesday", "Thursday", "Saturday"],
-    category: BREAD.id
+    category: BREAD.id,
+    menuIds: [LUNCH_MENU.id],
+    price: 3.80 // Example price
   },
   {
     id: 3,
@@ -58,7 +65,9 @@ export const mockBreadProducts: BreadProduct[] = [
       MILCH.id
     ],
     availability: ["Daily"],
-    category: BREAD.id
+    category: BREAD.id,
+    menuIds: [BREAKFAST_MENU.id, LUNCH_MENU.id],
+    price: 5.20 // Example price
   },
   {
     id: 4,
@@ -68,6 +77,8 @@ export const mockBreadProducts: BreadProduct[] = [
     allergens: [GLUTEN.id],
     ingredients: [WEIZENMEHL.id, WASSER.id, HEFE.id, SALZ.id],
     availability: ["Daily"],
-    category: BROETCHEN.id
+    category: BROETCHEN.id,
+    menuIds: [BREAKFAST_MENU.id],
+    price: 0.80 // Example price
   }
 ]

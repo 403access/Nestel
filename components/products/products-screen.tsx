@@ -32,14 +32,35 @@ export function ProductsScreen() {
     availableIngredientIds,
     availableIngredientTypes,
     selectedCategoryObjects,
+    selectedMenus,
+    setSelectedMenus,
+    toggleMenu,
+    ALL_MENUS,
   } = useProductSearch(mockBreadProducts)
-
-  // const filteredAllIngredients = ALL_INGREDIENTS.filter( // This is now handled within the hook
-  //   (ingredient) => ingredient.type !== 'dough' && ingredient.type !== 'dairy'
-  // );
 
   const [showFilters, setShowFilters] = useState(false);
 
+  // Helper function to calculate price based on selected menus
+  const getPriceInfo = (product: typeof filteredProducts[0]) => {
+    let currentPrice = product.price;
+    const originalPrice = product.price;
+
+    if (selectedMenus.length > 0 && product.menuIds && product.menuIds.length > 0) {
+      // Find the best discount from selected menus
+      for (const menuId of selectedMenus) {
+        const menu = ALL_MENUS.find(m => m.id === menuId);
+        if (menu && menu.offers) { // Check for offers array
+          for (const offer of menu.offers) { // Iterate through offers
+            const menuItem = offer.items.find(item => item.productId === product.id);
+            if (menuItem && menuItem.discountPrice !== undefined) {
+              currentPrice = Math.min(currentPrice, menuItem.discountPrice);
+            }
+          }
+        }
+      }
+    }
+    return { currentPrice, originalPrice };
+  };
 
   const toggleIngredient = (ingredientId: number) => {
     setSelectedIngredients((prev) =>
@@ -80,16 +101,19 @@ export function ProductsScreen() {
           allCategories={ALL_CATEGORIES} // Keep ALL_CATEGORIES as the items for categories filter
           allDoughIngredients={filteredDoughIngredients}
           allDairyIngredients={filteredDairyIngredients}
+          allMenus={ALL_MENUS} // Pass ALL_MENUS to Filters
           selectedIngredients={selectedIngredients}
           selectedAllergens={selectedAllergens}
           selectedCategories={selectedCategories}
           selectedDoughTypes={selectedDoughTypes}
           selectedDairyProducts={selectedDairyProducts}
+          selectedMenus={selectedMenus} // Pass selectedMenus to Filters
           toggleIngredient={toggleIngredient}
           toggleAllergen={toggleAllergen}
           toggleCategory={toggleCategory}
           toggleDoughType={toggleDoughType}
           toggleDairyProduct={toggleDairyProduct}
+          toggleMenu={toggleMenu} // Pass toggleMenu to Filters
           availableIngredientIds={availableIngredientIds}
           availableIngredientTypes={availableIngredientTypes}
           selectedCategoryObjects={selectedCategoryObjects}
@@ -97,7 +121,10 @@ export function ProductsScreen() {
       )}
       <FlatList
         data={filteredProducts}
-        renderItem={({ item }) => <ProductCard product={item} />}
+        renderItem={({ item }) => {
+          const { currentPrice, originalPrice } = getPriceInfo(item);
+          return <ProductCard product={item} currentPrice={currentPrice} originalPrice={originalPrice} />;
+        }}
         keyExtractor={(item) => item.id.toString()} // Ensure key is string
         contentContainerStyle={styles.listContent}
       />
