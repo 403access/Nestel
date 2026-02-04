@@ -5,8 +5,9 @@
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "prebuild": "expo prebuild",
+    "ios": "expo run:ios",
     "ios:dev": "eas build --platform ios --profile development",
     "web": "expo start --web",
     "format": "bunx --bun biome format --write ./",
