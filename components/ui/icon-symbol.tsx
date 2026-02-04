@@ -23,6 +23,7 @@ const MAPPING = {
   "chevron.right": "chevron-right",
   "folder.fill": "folder",
   "list.bullet": "list",
+  "questionmark.circle.fill": "help-center",
 } as IconMapping
 
 /**
