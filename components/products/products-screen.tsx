@@ -7,9 +7,9 @@ import { ProductCard } from "@/components/product-card"
 import { SearchBar } from "@/components/search-bar"
 import { ALL_ALLERGENS } from "@/data/allergens"
 import { ALL_CATEGORIES } from "@/data/categories"
-import { ALL_INGREDIENTS } from "@/data/ingredients"
 import { mockBreadProducts } from "@/data/products"
 import { useProductSearch } from "@/hooks/use-product-search"
+import { getPriceInfo } from "@/utils/pricing"
 
 export function ProductsScreen() {
   const {
@@ -26,7 +26,7 @@ export function ProductsScreen() {
     toggleDoughType,
     selectedDairyProducts,
     toggleDairyProduct,
-    filteredAllIngredients: hookFilteredAllIngredients, // Rename to avoid conflict with local variable
+    filteredAllIngredients: hookFilteredAllIngredients,
     filteredDoughIngredients,
     filteredDairyIngredients,
     availableIngredientIds,
@@ -40,35 +40,8 @@ export function ProductsScreen() {
 
   const [showFilters, setShowFilters] = useState(false)
 
-  // Helper function to calculate price based on selected menus
-  const getPriceInfo = (product: (typeof filteredProducts)[0]) => {
-    let currentPrice = product.price
-    const originalPrice = product.price
-
-    if (
-      selectedMenus.length > 0 &&
-      product.menuIds &&
-      product.menuIds.length > 0
-    ) {
-      // Find the best discount from selected menus
-      for (const menuId of selectedMenus) {
-        const menu = ALL_MENUS.find((m) => m.id === menuId)
-        if (menu && menu.offers) {
-          // Check for offers array
-          for (const offer of menu.offers) {
-            // Iterate through offers
-            const menuItem = offer.items.find(
-              (item) => item.productId === product.id
-            )
-            if (menuItem && menuItem.discountPrice !== undefined) {
-              currentPrice = Math.min(currentPrice, menuItem.discountPrice)
-            }
-          }
-        }
-      }
-    }
-    return { currentPrice, originalPrice }
-  }
+  // Helper function to calculate price based on selected menus - MOVED TO UTILS/PRICING.TS
+  // const getPriceInfo = (product: (typeof filteredProducts)[0]) => { ... };
 
   const toggleIngredient = (ingredientId: number) => {
     setSelectedIngredients((prev) =>
@@ -141,7 +114,7 @@ export function ProductsScreen() {
       <FlatList
         data={filteredProducts}
         renderItem={({ item }) => {
-          const { currentPrice, originalPrice } = getPriceInfo(item)
+          const { currentPrice, originalPrice } = getPriceInfo(item, selectedMenus); // Pass selectedMenus
           return (
             <ProductCard
               product={item}
@@ -167,7 +140,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 10,
-    marginHorizontal: 10, // Re-added margin
+    marginHorizontal: 10,
     paddingRight: 10
   },
   filterButton: {
