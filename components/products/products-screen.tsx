@@ -10,7 +10,7 @@ import React from "react"
 import { FlatList, StyleSheet, View } from "react-native"
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function ProductsScreen() {
+export function ProductsScreen() {
   const {
     searchQuery,
     setSearchQuery,

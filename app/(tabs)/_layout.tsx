@@ -16,9 +16,10 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab
       }}
+      // initialRouteName="products"
     >
       <Tabs.Screen
-        name="products"
+        name="index"
         options={{
           title: "Products",
           tabBarIcon: ({ color }) => (
