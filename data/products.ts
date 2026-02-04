@@ -1,4 +1,5 @@
 import { type Allergen, GLUTEN, LACTOSE } from "./allergens"
+import { BREAD, BROETCHEN, type Category } from "./categories"
 import {
   DINKELVOLLKORNMEHL,
   HEFE,
@@ -19,6 +20,7 @@ export interface BreadProduct {
   allergens: Allergen[]
   ingredients: Ingredient[]
   availability: string[]
+  category: Category
 }
 
 export const mockBreadProducts: BreadProduct[] = [
@@ -29,7 +31,8 @@ export const mockBreadProducts: BreadProduct[] = [
     weight: "500g",
     allergens: [GLUTEN],
     ingredients: [DINKELVOLLKORNMEHL, WASSER, HEFE, SALZ],
-    availability: ["Monday", "Wednesday", "Friday"]
+    availability: ["Monday", "Wednesday", "Friday"],
+    category: BREAD
   },
   {
     id: "2",
@@ -38,7 +41,8 @@ export const mockBreadProducts: BreadProduct[] = [
     weight: "750g",
     allergens: [GLUTEN],
     ingredients: [ROGGENMEHL, WASSER, SAUERTEIG, SALZ],
-    availability: ["Tuesday", "Thursday", "Saturday"]
+    availability: ["Tuesday", "Thursday", "Saturday"],
+    category: BREAD
   },
   {
     id: "3",
@@ -47,7 +51,8 @@ export const mockBreadProducts: BreadProduct[] = [
     weight: "1000g",
     allergens: [GLUTEN, LACTOSE],
     ingredients: [WEIZENMEHL, ROGGENMEHL, WASSER, HEFE, SALZ, MILCH],
-    availability: ["Daily"]
+    availability: ["Daily"],
+    category: BREAD
   },
   {
     id: "4",
@@ -56,6 +61,7 @@ export const mockBreadProducts: BreadProduct[] = [
     weight: "80g",
     allergens: [GLUTEN],
     ingredients: [WEIZENMEHL, WASSER, HEFE, SALZ],
-    availability: ["Daily"]
+    availability: ["Daily"],
+    category: BROETCHEN
   }
 ]
